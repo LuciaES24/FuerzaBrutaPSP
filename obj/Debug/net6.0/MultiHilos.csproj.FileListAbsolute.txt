@@ -1,0 +1,14 @@
+C:\Users\lucia\source\repos\MultiHilos\bin\Debug\net6.0\MultiHilos.exe
+C:\Users\lucia\source\repos\MultiHilos\bin\Debug\net6.0\MultiHilos.deps.json
+C:\Users\lucia\source\repos\MultiHilos\bin\Debug\net6.0\MultiHilos.runtimeconfig.json
+C:\Users\lucia\source\repos\MultiHilos\bin\Debug\net6.0\MultiHilos.dll
+C:\Users\lucia\source\repos\MultiHilos\bin\Debug\net6.0\MultiHilos.pdb
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.AssemblyInfoInputs.cache
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.AssemblyInfo.cs
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.csproj.CoreCompileInputs.cache
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.dll
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\refint\MultiHilos.dll
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.pdb
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\MultiHilos.genruntimeconfig.cache
+C:\Users\lucia\source\repos\MultiHilos\obj\Debug\net6.0\ref\MultiHilos.dll
