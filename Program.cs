@@ -3,13 +3,17 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 internal class Program
 {
+    static bool done;
+    static readonly object locker = new object();
     private static void Main(string[] args)
     {
         try
         {
+            done = false;
             //Leemos el archivo con las contraseñas
             StreamReader sr = new StreamReader("C:\\Users\\lucia\\Desktop\\2151220-passwords.txt");
             var Line = sr.ReadLine();
@@ -37,13 +41,19 @@ internal class Program
 
             //Dividimos las líneas del archivo para asignárselas a cada uno de los hilos
             int TotalLines = Lines.Count;
-            int DivLines = TotalLines / 4;
+            int DivLines = TotalLines / 8;
 
             int Div1 = DivLines;
             int Div2 = DivLines * 2;
             int Div3 = DivLines * 3;
             int Div4 = DivLines * 4;
+            int Div5 = DivLines * 5;
+            int Div6 = DivLines * 6;
+            int Div7 = DivLines * 7;
+            int Div8 = DivLines * 8;
 
+
+            //Creamos los hilos
             Thread hilo1 = new Thread(() => FuerzaBruta(0, Div1, Password, Lines));
             hilo1.Start();
 
@@ -56,7 +66,32 @@ internal class Program
             Thread hilo4 = new Thread(() => FuerzaBruta(Div3, Div4, Password, Lines));
             hilo4.Start();
 
+            Thread hilo5 = new Thread(() => FuerzaBruta(Div4, Div5, Password, Lines));
+            hilo5.Start();
 
+            Thread hilo6 = new Thread(() => FuerzaBruta(Div5, Div6, Password, Lines));
+            hilo6.Start();
+
+            Thread hilo7 = new Thread(() => FuerzaBruta(Div6, Div7, Password, Lines));
+            hilo7.Start();
+
+            Thread hilo8 = new Thread(() => FuerzaBruta(Div7, Div8, Password, Lines));
+            hilo8.Start();
+
+            if (done == true)
+            {
+                lock (locker)
+                {
+                    hilo1.Abort();
+                    hilo2.Abort();
+                    hilo3.Abort();
+                    hilo4.Abort();
+                    hilo5.Abort();
+                    hilo6.Abort();
+                    hilo7.Abort();
+                    hilo8.Abort();
+                }
+            }
         }
         catch (FileNotFoundException ex)
         {
@@ -81,13 +116,20 @@ internal class Program
     //Para ello utilizamos una fila de inicio, otra de fin, la contraseña que se ha elegido y la lista con todas las del archivo
     private static void FuerzaBruta(int start, int finish, string password, List<String> lines)
     {
+        //Calculamos el tiempo que tardan los hilos en descubrir la contraseña
+        Stopwatch timeMeasure = new Stopwatch();
+        timeMeasure.Start();
+
         for (int contaLines = start;  contaLines < finish; contaLines++)
         {
-            if (GetSHA256(lines[contaLines]) == GetSHA256(password))
+            if (GetSHA256(lines[contaLines]) == GetSHA256(password) && done==false)
             {
                 var ResultPassword = lines[contaLines];
                 Console.WriteLine("Contraseña encontrada: " + ResultPassword);
                 Console.WriteLine("Contraseña encriptada: " + GetSHA256(password));
+                timeMeasure.Stop();
+                Console.WriteLine($"Tiempo: {timeMeasure.Elapsed.TotalSeconds} s");
+                done = true;
                 break;
             }
         }
