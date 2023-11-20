@@ -30,7 +30,6 @@ internal class Program
 
             //Cerramos el archivo
             sr.Close();
-            Console.ReadLine();
 
             //Generamos una contraseña aleatoria
             var Random = new Random();
