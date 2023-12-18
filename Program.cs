@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.IO;
 using System.Diagnostics;
 
 internal class Program
@@ -14,22 +11,9 @@ internal class Program
         try
         {
             done = false;
-            //Leemos el archivo con las contraseñas
-            StreamReader sr = new StreamReader("C:\\Users\\lucia\\Desktop\\2151220-passwords.txt");
-            var Line = sr.ReadLine();
 
-            //Guardamos todas las líneas del fichero
-            List<string> Lines = new List<string>();
-
-            while (Line != null)
-            {
-                Lines.Add(Line);
-                //Read the next line
-                Line = sr.ReadLine();
-            }
-
-            //Cerramos el archivo
-            sr.Close();
+            //Leemos todas las líneas del fichero
+            var Lines = File.ReadAllLines("2151220-passwords.txt").ToList();
 
             //Generamos una contraseña aleatoria
             var Random = new Random();
@@ -42,53 +26,30 @@ internal class Program
             int TotalLines = Lines.Count;
             int DivLines = TotalLines / 8;
 
-            int Div1 = DivLines;
-            int Div2 = DivLines * 2;
-            int Div3 = DivLines * 3;
-            int Div4 = DivLines * 4;
-            int Div5 = DivLines * 5;
-            int Div6 = DivLines * 6;
-            int Div7 = DivLines * 7;
-            int Div8 = DivLines * 8;
+            var numHilos = 8;
+            var listaHilos = new List<Thread>();
 
+            for (int i = 0; i <= numHilos; i++)
+            {
+                if (i == 8)
+                {
+                    break;
+                }
+                var hilo = new Thread(() => FuerzaBruta(DivLines*i, (DivLines*(i+1))-1, Password, Lines));
+                hilo.Start();
+                listaHilos.Add(hilo);
+                Thread.Sleep(10);
+            }
 
-            //Creamos los hilos
-            Thread hilo1 = new Thread(() => FuerzaBruta(0, Div1, Password, Lines));
-            hilo1.Start();
-
-            Thread hilo2 = new Thread(() => FuerzaBruta(Div1, Div2, Password, Lines));
-            hilo2.Start();
-
-            Thread hilo3 = new Thread(() => FuerzaBruta(Div2, Div3, Password, Lines));
-            hilo3.Start();
-
-            Thread hilo4 = new Thread(() => FuerzaBruta(Div3, Div4, Password, Lines));
-            hilo4.Start();
-
-            Thread hilo5 = new Thread(() => FuerzaBruta(Div4, Div5, Password, Lines));
-            hilo5.Start();
-
-            Thread hilo6 = new Thread(() => FuerzaBruta(Div5, Div6, Password, Lines));
-            hilo6.Start();
-
-            Thread hilo7 = new Thread(() => FuerzaBruta(Div6, Div7, Password, Lines));
-            hilo7.Start();
-
-            Thread hilo8 = new Thread(() => FuerzaBruta(Div7, Div8, Password, Lines));
-            hilo8.Start();
-
+            //Si la tarea ha terminado, hacemos que terminen todos los hilos
             if (done == true)
             {
                 lock (locker)
                 {
-                    hilo1.Abort();
-                    hilo2.Abort();
-                    hilo3.Abort();
-                    hilo4.Abort();
-                    hilo5.Abort();
-                    hilo6.Abort();
-                    hilo7.Abort();
-                    hilo8.Abort();
+                    foreach (Thread t in listaHilos)
+                    {
+                        t.Abort();
+                    }
                 }
             }
         }
@@ -96,7 +57,6 @@ internal class Program
         {
             Console.WriteLine("No se ha encontrado el archivo");
         }
-        
     }
 
     //Encripta una cadena en SHA256 y la devuelve
@@ -119,7 +79,7 @@ internal class Program
         Stopwatch timeMeasure = new Stopwatch();
         timeMeasure.Start();
 
-        for (int contaLines = start;  contaLines < finish; contaLines++)
+        for (int contaLines = start; contaLines < finish; contaLines++)
         {
             if (GetSHA256(lines[contaLines]) == GetSHA256(password) && done==false)
             {
@@ -129,6 +89,9 @@ internal class Program
                 timeMeasure.Stop();
                 Console.WriteLine($"Tiempo: {timeMeasure.Elapsed.TotalSeconds} s");
                 done = true;
+                break;
+            }else if (done == true)
+            {
                 break;
             }
         }
