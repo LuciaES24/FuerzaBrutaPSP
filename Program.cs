@@ -29,6 +29,7 @@ internal class Program
             var numHilos = 8;
             var listaHilos = new List<Thread>();
 
+            //Creamos todos los hilos y los iniciamos
             for (int i = 0; i <= numHilos; i++)
             {
                 if (i == 8)
